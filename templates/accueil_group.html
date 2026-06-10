@@ -1,0 +1,170 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<section class="flex justify-center px-4 py-10">
+    <div class="w-full max-w-4xl flex flex-col gap-6">
+
+        {# ── EN-TÊTE ────────────────────────────────────────────────────────────── #}
+        <article class="bg-white/60 border border-white/40 backdrop-blur-md rounded-3xl shadow-lg p-8 flex items-center justify-between flex-wrap gap-4">
+            <div>
+                <h1 class="text-4xl font-semibold">
+                Groupe <span class="text-amber-700">{{ team }}</span>
+                </h1>
+                <p class="text-gray-500 mt-1"> {{ membres | length }} membre{{ "s" if membres | length != 1 else "" }} dans ce groupe</p>
+            </div>
+ 
+            <form action="{{ url_for('quitter_team') }}" method="POST" onclick="return confirm('Tu veux vraiment quitter le groupe ?')">
+                <button type="submit" class="bg-red-400 py-2 px-4 rounded-full text-white font-bold cursor-pointer hover:bg-red-800 hover:shadow-2xl transition">
+                Quitter le groupe
+                </button>
+            </form>
+        </article>
+
+        {# ── MEMBRES ────────────────────────────────────────────────────────────── #}
+        <article class="bg-white/60 border border-white/40 backdrop-blur-md rounded-3xl shadow-lg p-8">
+            <h2 class="text-xs font-semibold uppercase tracking-widest text-gray-400 mb-4">Membres</h2>
+
+            <div class="flex flex-wrap lg:gap-2">
+                {% for membre in membres %}
+                <span class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-amber-50 border border-amber-200 text-sm">
+                    <span class="w-7 h-7 rounded-full bg-amber-200 text-amber-800 flex items-center justify-center text-xs font-semibold">
+                        {{ membre.nom[:2] | upper }}
+                    </span>
+                    {{ membre.nom }}
+                    {% if membre.nom == nom %}
+                        <span class="text-xs text-gray-400">(toi)</span>
+                    {% endif %}
+                </span>
+                {% endfor %}
+            </div>
+        </article>
+
+
+        {# ── FAVORIS DU GROUPE ───────────────────────────────────────────────────── #}
+        <article class="bg-white/60 border border-white/40 backdrop-blur-md rounded-3xl shadow-lg p-8">
+            <h2 class="text-xs font-semibold uppercase tracking-widest text-gray-400 mb-4">Favoris du groupe</h2>
+            {% if annonces_fav %}
+                <ul class="divide-y divide-gray-200">
+                    {% for annonce in annonces_fav %}
+                        <li class="flex items-center gap-4 py-4 first:pt-0 last:pb-0">
+ 
+                            <a href="{{ url_for('annonce', id_annonces=annonce._id) }}" class="w-16 h-16 rounded-2xl overflow-hidden bg-amber-50 flex-shrink-0 block border border-amber-100">
+                                {% if annonce.img %}
+                                    <img src="{{ url_for('static', filename=annonce.img) }}" alt="{{ annonce.titre }}" class="w-full h-full object-cover">
+                                {% else %}
+                                    <div class="w-full h-full flex items-center justify-center text-3xl">🍽️</div>
+                                {% endif %}
+                            </a>
+ 
+                            <div class="flex-1 min-w-0">
+                                <a href="{{ url_for('annonce', id_annonces=annonce._id) }}" class="font-semibold text-gray-800 hover:underline truncate block text-lg">
+                                    {{ annonce.titre }}
+                                </a>
+                                <p class="text-sm text-gray-400 mt-0.5">par {{ annonce.auteur }}</p>
+                            </div>
+ 
+                            <span class="text-base text-rose-500 font-semibold flex-shrink-0">
+                                ❤️ {{ annonce.score }}
+                            </span>
+ 
+                            {% set id_str = annonce._id | string %}
+                            {% if id_str not in votes_resume %}
+                                <form action="{{ url_for('proposer_vote', id_annonce=id_str) }}" method="POST">
+                                    <button type="submit" class="text-sm px-3 py-1.5 rounded-full border border-amber-300 text-amber-700 hover:bg-amber-50 transition cursor-pointer flex-shrink-0">
+                                        Proposer au vote
+                                    </button>
+                                </form>
+                            {% else %}
+                                <span class="text-sm text-green-600 font-semibold flex-shrink-0">✓ En vote</span>
+                            {% endif %}
+ 
+                        </li>
+                    {% endfor %}
+                </ul>
+ 
+            {% else %}
+                <div class="text-center py-8 text-gray-400">
+                    <p class="text-4xl mb-3">🍽️</p>
+                    <p class="text-sm">Aucun favori partagé dans le groupe pour l'instant.</p>
+                </div>
+            {% endif %}
+        </article>
+
+
+        {# ── VOTE DU GROUPE ──────────────────────────────────────────────────────── #}
+        <article class="bg-white/60 border border-white/40 backdrop-blur-md rounded-3xl shadow-lg p-8">
+            <div class="flex items-center justify-between mb-6 flex-wrap gap-3">
+                <h2 class="text-xs font-semibold uppercase tracking-widest text-gray-400">Vote — on mange quoi ?</h2>
+                {% if votes_resume %}
+                <form action="{{ url_for('reset_votes') }}" method="POST" onclick="return confirm('Remettre tous les votes à zéro ?')">
+                    <button type="submit" class="text-sm px-3 py-1.5 rounded-full border border-gray-300 text-gray-500 hover:bg-gray-100 transition cursor-pointer">
+                         Remettre à zéro
+                    </button>
+                </form>
+                {% endif %}
+            </div>
+
+            {% if annonces_candidats %}
+            <ul class="flex flex-col gap-6">
+                {% for annonce in annonces_candidats %}
+                    {% set id_str = annonce._id | string %}
+                    {% set vote_info = votes_resume.get(id_str, {'count': 0, 'user_voted': false, 'pct': 0}) %}
+
+                    <li class="flex flex-col gap-2">
+                        <div class="flex items-center gap-3 flex-wrap">
+                            <div class="w-10 h-10 rounded-xl overflow-hidden bg-amber-50 flex-shrink-0 border border-amber-100">
+                                {% if annonce.img %}
+                                    <img src="{{ url_for('static', filename=annonce.img) }}" alt="{{ annonce.titre }}" class="w-full h-full object-cover">
+                                {% else %}
+                                    <div class="w-full h-full flex items-center justify-center text-lg">🍽️</div>
+                                {% endif %}
+                            </div>
+
+                            <span class="flex-1 font-semibold text-gray-800 truncate">
+                                {{ annonce.titre }}
+                            </span>
+
+                            <span class="text-sm text-gray-400 flex-shrink-0">
+                                {{ vote_info.count }} vote{{ 's' if vote_info.count != 1 else '' }}
+                            </span>
+
+                            <form action="{{ url_for('voter', id_annonce=id_str) }}" method="POST" class="flex-shrink-0">
+                                <button type="submit"
+                                    class="text-sm px-4 py-1.5 rounded-full border transition cursor-pointer font-semibold
+                                    {% if vote_info.user_voted %}
+                                        bg-amber-400 border-amber-400 text-white hover:bg-amber-500
+                                    {% else %}
+                                        border-amber-300 text-amber-700 hover:bg-amber-50
+                                    {% endif %}">
+                                    {% if vote_info.user_voted %}Voté ✓{% else %}Voter{% endif %}
+                                </button>
+                            </form>
+                        </div>
+
+                        {# Barre de progression #}
+                        <div class="h-2 rounded-full bg-gray-100 overflow-hidden">
+                            <div class="h-full rounded-full transition-all duration-500
+                                {% if vote_info.user_voted %}bg-amber-400{% else %}bg-gray-300{% endif %}"
+                                style="width: {{ vote_info.pct | default(0) | int }}%">
+                            </div>
+                        </div>
+                    </li>
+                {% endfor %}   
+            </ul>
+
+            {% else %}
+            <div class="text-center py-8 text-gray-400">
+                <p class="text-4xl mb-3">🗳️</p>
+                <p class="text-sm">Aucune annonce proposée au vote.</p>
+                <p class="text-xs mt-1">Propose une annonce depuis les favoris du groupe !</p>
+            </div>
+            {% endif %}
+        </article>
+
+    </div>
+</section>
+
+
+
+{% endblock %}

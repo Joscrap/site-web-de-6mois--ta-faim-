@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+    <!-- Ici on code -->
+    <div class="flex items-center justify-center pt-18 pb-40" >
+        <form method="POST" action="{{ url_for('connexion_groupe')}}" class="p-9 rounded bg-white/60 border border-white/40 backdrop-blur-md rounded-3xl shadow-lg ">
+
+            <h2 class="text-5xl text-center pb-10">rejoindre un groupe</h2>
+
+            <!--Les inputs-->
+            <div>
+                <input name="team" type="text" placeholder="Nom du groupe" class="border-none p-2 leading-tight appearance-none focus:outline-none min-w-xs">
+                <hr class="border-0 h-[1px] bg-gray-400">
+            </div>
+            <div class="pt-7">
+                <input name="mot_de_passe" type="password" placeholder="Mot de passe" class="border-none p-2 leading-tight appearance-none focus:outline-none min-w-xs">
+                <hr class="border-0 h-[1px] bg-gray-400">
+            </div>
+
+            <!-- Message d'erreur-->
+            {% if erreur %}
+            <p class="text-red-700 text-center text-lg pt-2"><strong>Erreur :</strong> {{erreur}}</p>
+            {% endif %}
+
+            <!--LE BOUTON-->
+            <div class="flex justify-center mt-6">
+                <button type="submit" class="bg-red-400 py-1 rounded-xl text-white font-bold cursor-pointer hover:bg-red-800 px-16 hover:shadow-2xl hover:-translate-y-1 transition-all duration-300">
+                    Se connecter
+                </button>
+            </div>
+
+            <a href="./create_groupe">
+                <h2>créer un groupe</h2>
+            </a>
+
+        </form>
+    </div>
+
+{% endblock %}

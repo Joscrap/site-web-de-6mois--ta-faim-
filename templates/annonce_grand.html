@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<!-- Structure du bloc d'annonce -->
+ <section class="flex justify-center pt-12">
+    <article class="w-xl p-6 bg-white/60 border border-white/40 backdrop-blur-md rounded-3xl shadow-lg">
+
+        <!--titre-->
+        <h2 class="text-4xl text-center pb-2 font-semibold">{{annonces['titre']}}</h2>
+        <hr>
+
+
+        <!--auteur-->
+        <p class="text-xl italic pt-6">plat proposée par <b>{{annonces['auteur']}}</b> le <b>{{annonces.date.strftime("%m/%d/%Y") }}</b></p>
+
+
+        <!--description-->
+        <div class="flex justify-around pt-6">
+            <p class="w-70 pr-4 ">{{annonces['description']}}</p>
+
+
+            <!--image de l'annonce-->
+            <img class="rounded-2xl w-56" src="{{ url_for('static', filename=annonces['img']) }}"> <!--annonces['img'] → chemin relatif que tu as en BDD, par ex. "uploads/photo.png"-->
+            <!--url_for('static', filename=...) → génère /static/uploads/photo.png-->
+        </div>
+        <!-- Formulaire POST pour toggle le favori (on utilise POST car on modifie des données) -->
+        <form action="/toggle_favori/{{ annonces._id }}" method="POST">
+            <button type="submit">
+    
+            <!-- On vérifie si l'_id de cette annonce est dans la liste des favoris de l'utilisateur -->
+            {% if annonces._id in user_favoris %}
+            ❤️ Retirer des favoris   <!-- Déjà en favori → bouton pour retirer -->
+            {% else %}
+            🤍 Ajouter aux favoris   <!-- Pas encore en favori → bouton pour ajouter -->
+            {% endif %}
+
+            </button>
+        </form>
+    </article>
+ </section>
+ 
+{% endblock %}

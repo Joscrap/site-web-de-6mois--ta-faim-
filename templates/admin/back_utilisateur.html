@@ -1,0 +1,44 @@
+{% extends "admin/back_base.html" %}
+
+
+{% block content %}
+
+
+    <section class="flex justify-center ">
+    
+        <article class="w-7xl p-10 bg-white/60 border border-white/40 backdrop-blur-md rounded-3xl shadow-lg h-[500px]">
+            
+            <h1 class="flex justify-center text-4xl">Bienvenue sur la page de gestion des utilisateurs !</h1>
+
+            <p class="pt-6 pb-2">Voici la liste de tous les utilisateurs inscrits sur le site :</p>
+
+            <table class="w-full text-left border-collapse">
+                <thead>
+                    <tr>
+                        <th class="border border-white/40 p-2">Nom</th>
+                        <th class="border border-white/40 p-2">Role</th>
+                        <th class="border border-white/40 p-2">Groupe</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for user in utili %}
+                    <tr>
+                        <td class="border border-white/40 p-2">{{ user['nom'] }}</td>
+                        <td class="border border-white/40 p-2">{{ user['role'] }}</td>
+                        <td class="border border-white/40 p-2">{{ user['team'] }}</td>
+                        <td class="border border-white/40 p-2"><a href="/utilisateur/{{user['_id']}}">Voir</a></td>
+                        <td class="border border-white/40 p-2"><a href="/modif_utilis/{{user['_id']}}">Modifier</a></td>
+                        <td class="border border-white/40 p-2"><form action="{{ url_for('suprimer_utili', id_post=user._id) }}" method="POST" onsubmit="return confirm('Tu es sûr de vouloir supprimer cet utilisateur ?')"><button type="submit">Supprimer</button></form></td>
+                    </tr>
+                    {% endfor %}
+                    
+                </tbody>
+            </table>
+            {% if message %}
+            <p>Message : {{message}}</p>
+            {% endif %}
+        </article>
+    
+    </section>
+
+{% endblock %}

@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<section class="flex justify-center">
+
+    <article class="w-5xl p-10 bg-white/60 border border-white/40 backdrop-blur-md rounded-3xl shadow-lg h-[500px]">
+        <div class="flex mb-10">
+            <img src="/static/image/Onizuka_grimace.png" class="rounded-full max-w-22 h-auto">
+            <span class="font-semibold text-7xl pl-4">{{user["nom"]}}</span>
+        </div>
+
+
+        <div class="pl-20">
+            <div class="flex items-center gap-3 pb-6">
+                <h2 class="font-semibold text-2xl">Groupe :</h2>
+                <span class="text-2xl">{{user["team"]}}</span>
+
+                <form action="{{ url_for('quitter_team') }}" method="POST" type="submit" onclick="return confirm('Tu veux vraiment quitter le groupe ?')">
+                    <button type="submit" class="bg-red-400 py-1 rounded-full text-white font-bold cursor-pointer hover:bg-red-800 px-2 hover:shadow-2xl">
+                        Quitter le groupe
+                    </button>
+                </form>
+            </div>
+            <div class="gap-2 text-2xl">
+                <h2 class="font-semibold">Nombre de favori :</h2>
+                <span class="text-2xl">{{nb_fav}}</span>
+            </div>
+
+        </div>
+
+        <div class="mt-4">
+            <h2 class="font-semibold mb-2">Bio :</h2>
+
+            <form action="{{ url_for('update_bio') }}" method="POST" class="flex flex-col gap-2">
+
+                <textarea name="bio" class="p-3 rounded-xl border border-gray-300 w-full resize-none" placeholder="Aucune bio pour le moment." rows="3">{{user["bio"]}}</textarea>
+
+                {% if session['util'] == user["nom"] %}
+                <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded-xl hover:bg-blue-600">
+                    Modifier la bio
+                </button>
+                {% endif %}
+                
+            </form>
+        </div>
+    </article>
+</section>
+{% endblock %}

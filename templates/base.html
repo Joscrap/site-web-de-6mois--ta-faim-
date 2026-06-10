@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ta faim ?</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link rel="stylesheet" href="../static/style.css">
+</head>
+<body class="min-h-screen flex flex-col bg-[linear-gradient(160deg,#EDE4D0,#C7BDA9)]">
+
+<!--tête-->
+    <header class="p-6 flex justify-between">
+        {% if session['util'] %}
+        <a href="/accueil">
+            <img class="max-w-48 hover:scale-120 transition-transform duration-300" src="/static/image/Design sans titre (7).png">
+        </a>
+        {% else %}
+        <a href="/">
+            <img class="max-w-48 hover:scale-120 transition-transform duration-300" src="/static/image/Design sans titre (7).png">
+        </a>
+        {% endif %}
+        
+        <!--barre de recherche-->
+        {% if session['util'] %}
+        <form action="/recherche" method="post">
+            <input type="text" name="query" placeholder="Entrez votre recherche">
+            <input type="submit" value="Rechercher">
+        </form>
+        {% endif %}
+
+
+        <nav>
+            <ul class="flex space-x-10 text-lg font-semibold">
+                {% if not session['util'] %}
+                <li class="hover:scale-130 transition-transform duration-300"><a href="/login">Se Connecter</a></li>
+                <li class="hover:scale-130 transition-transform duration-300"><a href="/register">S'enregistrer</a></li>
+                {% endif %}
+            </ul>
+
+            <!-- SOUS MENU -->
+            {% if session['util'] %}
+            <div class="nav-profil" id="menuProfil">
+                <a href="" class="lien-nav declencheur-profil">
+                    <span class="icone-profil">👤</span> {{nom}}
+                    <span class="chevron">▾</span>
+                </a>  
+                <div class="menu-deroulant" id="menuDeroulant">
+                    <a href="/profil">
+                        <span>⚙️</span> Mon Compte
+                    </a>
+
+                    <a href="/accueil_group">
+                        <span>👥</span> Mon Groupe
+                    </a>
+
+                    <a href="/favori">
+                        <span>❤️</span> Mes Favoris
+                    </a>
+
+                    <a href="/logout">
+                        <div class="flex">
+                            <img src="/static/image/logo_déco.png" class="w-1/8 h-auto pr-3">
+                            Se Déconnecter
+                        </div>
+                    </a>
+
+                </div>
+            </div>
+            {% endif %}
+            <!-- FIN -->
+        </nav>
+    </header>
+
+    <!--corp-->
+    <main class="flex-1">
+
+        {%block content %}
+    
+        {%endblock %}
+
+    </main>
+    
+    <!--pied-->
+    <footer class="p-10 text-center">
+        <p>Copyright : Joris'©</p>
+        <p>contact pro : joscrap@gmail.com</p>
+    </footer>
+</body>
+</html>

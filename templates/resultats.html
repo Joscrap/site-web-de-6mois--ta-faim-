@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+
+{% block content %}
+     
+<section class="flex justify-center px-4 py-10">
+    <div class="w-full max-w-7xl flex flex-col gap-6">
+
+        <h1 class="text-3xl font-bold text-gray-800 px-4">Résultats de la recherche :</h1>
+
+        {% if annonces %}
+            <section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 p-4">
+
+                {% for annonce in annonces %}
+                <article class="flex flex-col p-5 bg-white/60 border border-white/40 backdrop-blur-md rounded-3xl shadow-lg hover:shadow-2xl hover:-translate-y-2 hover:scale-105 transition-all duration-300">
+
+                    <a href="{{ url_for('annonce', id_annonces=annonce._id) }}" class="flex-grow flex flex-col">
+                        
+                        <h2 class="text-center text-xl font-semibold mb-1 text-gray-800">{{ annonce['titre'] }}</h2>
+                        <p class="text-center text-xs italic text-gray-500 mb-4">
+                            Proposé par <b>{{ annonce['auteur'] }}</b> le <b>{{ annonce.date.strftime("%d/%m/%Y") }}</b>
+                        </p>
+
+                        {% if annonce['img'] %}
+                        <div class="w-full h-40 mb-4 rounded-xl overflow-hidden shadow-inner flex-shrink-0">
+                            <img class="w-full h-full object-cover" src="{{ url_for('static', filename=annonce['img']) }}" alt="{{ annonce['titre'] }}">
+                        </div>
+                        {% endif %}
+
+                        <p class="text-sm text-gray-700 text-center line-clamp-3 mb-4">
+                            {{ annonce['description'] }}
+                        </p>
+                    </a>
+
+                    <form action="/toggle_favori/{{ annonce._id }}" method="POST" class="mt-auto">
+                        <button type="submit" class="w-full py-2 px-4 rounded-full font-semibold transition-colors duration-200 border 
+                            {% if annonce._id in user_favoris %}
+                                bg-rose-50 border-rose-200 text-rose-600 hover:bg-rose-100
+                            {% else %}
+                                bg-gray-50 border-gray-200 text-gray-600 hover:bg-gray-100
+                            {% endif %}">
+                            
+                            {% if annonce._id in user_favoris %}
+                                ❤️ Retirer
+                            {% else %}
+                                🤍 Ajouter
+                            {% endif %}
+                        </button>
+                    </form>
+
+                </article>
+                {% endfor %}
+
+            </section>
+        {% else %}
+            <div class="p-20 text-center text-gray-500 bg-white/40 rounded-3xl backdrop-blur-md">
+                <p class="text-xl">Aucun résultats trouver 🍽️</p>
+            </div>
+        {% endif %}
+
+    </div>
+</section>
+        
+{% endblock %}

@@ -1,0 +1,8 @@
+flask
+jinja2
+bcrypt
+requests
+pymongo
+gunicorn 
+python-dotenv
+Werkzeug
