@@ -519,12 +519,34 @@ def create_groupe():
 
 ###########################################################################################################################
 
+import cloudinary
+import cloudinary.uploader
+from cloudinary.utils import cloudinary_url
+
+def upload(image):
+    api_sec = os.getenv("CLOUDINARY_SEC")
+    api = os.getenv("CLOUDINARY")
+
+
+    # Configuration       
+    cloudinary.config( 
+        cloud_name = "dsoscu8cn", 
+        api_key = api, 
+        api_secret = api_sec, # Click 'View API Keys' above to copy your API secret
+        secure=True
+    )
+
+    # Upload an image
+    upload_result = cloudinary.uploader.upload(image)
+
+    return upload_result["secure_url"]
+
+###########################################################################################################################
+
+
 
 # Autoriser seulement certains types de fichiers
 ALLOWED_EXTENSIONS = {'png', 'jpg'}
-
-# Taille max en bytes (2 MB)
-MAX_FILE_SIZE = 2 * 1024 * 1024  
 
 def allowed_file(filename):
     #rsplit('.', 1)[1] → prend la partie après le dernier point (l’extension)
@@ -542,49 +564,30 @@ def nouvelle_annonce():
     if request.method == 'POST':     
         #Récupère le fichier uploadé (<input type="file" name="image">).
         image = request.files.get('image')
-        #image_chemin = None → permet de gérer le cas où l’utilisateur ne met pas d’image.
-        image_chemin = ""
-
-
         titre = request.form.get('titre')
+        description = request.form.get('description')
+
+        #Vérifie :qu’un fichier existe et qu’il n’est pas vide
+        if not image or image.filename == '':
+            return render_template('création_annonce.html', erreur="Vous devez ajouter une image !")
 
         if not titre or titre.strip() == "":
             return render_template('création_annonce.html', erreur="Titre obligatoire")
-        
-        #Vérifie :qu’un fichier existe et qu’il n’est pas vide
-        if image and image.filename != "":
 
-            # vérifie le format du fichier (fonction au dessus)
-            if not allowed_file(image.filename):
-                return render_template('création_annonce.html', erreur="Extension non autorisée (jpg, png)")
+        # vérifie le format du fichier (fonction au dessus)
+        if not allowed_file(image.filename):
+            return render_template('création_annonce.html', erreur="Extension non autorisée. Seuls les JPG et PNG sont acceptés")
 
 
-            # Vérifie la taille du fichier
-            image.seek(0, os.SEEK_END) # → va à la fin du fichier pour mesurer sa taille.
-            taille = image.tell() # → récupère la taille en bytes.
-            image.seek(0) # → remet le curseur au début pour ne pas casser l’upload.
-            if taille > MAX_FILE_SIZE: # Si le fichier est trop gros → renvoie le formulaire avec message d’erreur.
-                return render_template('création_annonce.html', erreur="Image trop lourde (max 2MB)")
-
-
-
-            #secure_filename Nettoie le nom du fichier "mon image.png" → "mon_image.png"
-            #str(ObjectId()) ajoute l'id de l'annonce devant le nom pour éviter les doublon de nom et suprimer un fichier
-            filename = str(ObjectId()) + "_" + secure_filename(image.filename)
-            #Crée le chemin complet :static/uploads/mon_image.png
-            chemin = os.path.join('./static/uploads/', filename)
-            #Sauvegarde l’image sur la machine
-            image.save(chemin)
-            #On garde le chemin pour l’enregistrer en base ex: static/uploads/img.png
-            image_chemin = 'uploads/' + filename # filename → chemin relatif à utiliser dans le HTML avec url_for('static', filename=...).
+        image_url = upload(image)
 
         # j'ajoute l'annonce dans ma bdd
         mongo.ta_faim.annonces.insert_one({
             'titre' : titre,
             'auteur' : session.get('util'),
-            'description' : request.form['description'],
-            'img' : image_chemin,
-            'date': datetime.utcnow()  # la date
+            'description' : description,
+            'img' : image_url,
+            'date': datetime.utcnow()             
         })
         #on retourne sur la page d'acceil
         return redirect(url_for('accueil'))
