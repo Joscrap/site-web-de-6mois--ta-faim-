@@ -22,7 +22,7 @@
 
                         {% if annonce['img'] %}
                         <div class="w-full h-40 mb-4 rounded-xl overflow-hidden shadow-inner flex-shrink-0">
-                            <img class="w-full h-full object-cover" src="{{ url_for('static', filename=annonce['img']) }}" alt="{{ annonce['titre'] }}">
+                            <img class="w-full h-full object-cover" src="{{ annonce['img'] }}" alt="{{ annonce['titre'] }}">
                         </div>
                         {% endif %}
 
