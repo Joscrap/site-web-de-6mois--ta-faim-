@@ -21,7 +21,7 @@
 
 
             <!--image de l'annonce-->
-            <img class="rounded-2xl w-56" src="{{ url_for('static', filename=annonces['img']) }}"> <!--annonces['img'] → chemin relatif que tu as en BDD, par ex. "uploads/photo.png"-->
+            <img class="rounded-2xl w-56" src="{{ annonces.img }}"> <!--annonces['img'] → chemin relatif que tu as en BDD, par ex. "uploads/photo.png"-->
             <!--url_for('static', filename=...) → génère /static/uploads/photo.png-->
         </div>
         <!-- Formulaire POST pour toggle le favori (on utilise POST car on modifie des données) -->
