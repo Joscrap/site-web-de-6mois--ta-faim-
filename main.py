@@ -324,13 +324,31 @@ def suprimer_utili(id_post):
     else:
         return "Accès refusé. Vous devez être connecté en tant qu'administrateur."
 
-#route pour suprimer annonce
+#route pour supprimer annonce
 @app.route('/suprimer_annonce/<id_post>', methods=['POST'])
 def suprimer_annonce(id_post):
-    if 'util' in session and session['role'] == 'admin':
-        db_utilis = mongo.ta_faim.annonces
-        annonce = db_utilis.delete_one({"_id": ObjectId(id_post)})
-        return redirect(url_for("admin_annonce", message="L'annonce est bien suprimer", annonce=annonce))
+    if 'util' in session and session.get('role') == 'admin':
+
+        db_annonces = mongo.ta_faim.annonces
+        db_utilis = mongo.ta_faim.utilisateur
+        
+        # Retire l'annonce des favoris de tous les utilisateurs
+        db_utilis.update_many(
+            {},
+            {
+                "$pull": {
+                    "favoris": ObjectId(id_post)
+                }
+            }
+        )
+
+        annonce = db_annonces.delete_one({"_id": ObjectId(id_post)})
+
+        if annonce.deleted_count == 1:
+            return redirect(url_for("admin_annonce", message="L'annonce a été  supprimer"))
+        else:
+            return redirect(url_for("admin_annonce", message="Annonce introuvable"))
+    
     else:
         return "Accès refusé. Vous devez être connecté en tant qu'administrateur."
 

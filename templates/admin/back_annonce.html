@@ -23,7 +23,7 @@
                     <tr>
                         <td class="border border-white/40 p-2">{{ annonce['titre'] }}</td>
                         <td class="border border-white/40 p-2">{{ annonce['description'] }}</td>
-                        <td class="border border-white/40 p-2">{{ annonce['img'] }}</td>
+                        <td class="border border-white/40 p-2"><img class="w-full h-full object-cover" src="{{ annonce.img }}"></td>
                         <td class="border border-white/40 p-2"><a href="/utilisateur/{{annonce['_id']}}">Voir</a></td>
                         <td class="border border-white/40 p-2"><a href="/modif_utilis/{{annonce['_id']}}">Modifier</a></td>
                         <td class="border border-white/40 p-2"><form action="{{ url_for('suprimer_annonce', id_post=annonce._id) }}" method="POST" onsubmit="return confirm('Tu es sûr de vouloir supprimer cet utilisateur ?')"><button type="submit">Supprimer</button></form></td>
