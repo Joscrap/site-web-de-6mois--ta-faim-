@@ -23,14 +23,12 @@
         
         <!--barre de recherche-->
         {% if session['util'] %}
-        <div class="pt-4">
+        <div class="sm:pt-4 lg:pt-4 xl:pt-4">
             <form action="/recherche" method="post" class="flex items-center bg-white rounded-3xl py-2 px-4 shadow-sm ">
-                <input type="text" name="query" placeholder="Entrez votre recherche" class="outline-none">
+                <input type="text" name="query" placeholder="Entrez votre recherche" class="outline-none text-[9px] sm:text-base lg:text-lg xl:text-lg ">
                 <input type="image" src="../static/image/rechercher.png" class="w-6 h-6 ml-2 cursor-pointer transition-transform hover:scale-105">
             </form>
         </div>
-
-
         {% endif %}
 
 
