@@ -1,6 +1,100 @@
 {% extends "base.html" %}
 
 {% block content %}
+<section class="text-center max-w-5xl mx-auto px-6 py-10">
+
+    <!-- Présentation -->
+    <div class="mb-16">
+        <h1 class="text-5xl font-bold mb-6">
+            Présentation du site
+        </h1>
+
+        <p class="text-xl leading-relaxed max-w-3xl mx-auto">
+            Mon site est une plateforme qui permet de choisir facilement
+            le repas du soir en groupe. Le principe est simple : les utilisateurs
+            peuvent proposer différents plats, les ajouter à leurs favoris et
+            voter ensemble pour décider de ce qu’ils vont manger.
+        </p>
+    </div>
 
 
+    <!-- Groupe -->
+    <div class="mb-16">
+        <h2 class="text-3xl font-semibold mb-5">
+            Créer ou rejoindre un groupe
+        </h2>
+
+        <p class="text-xl leading-relaxed max-w-3xl mx-auto">
+            Pour commencer, chaque utilisateur doit créer un compte.
+            Il peut ensuite créer un groupe ou rejoindre un groupe existant
+            grâce à son nom et son mot de passe.
+        </p>
+
+        <p class="text-xl leading-relaxed max-w-3xl mx-auto mt-4">
+            Le groupe permet de réunir les différentes personnes qui vont
+            participer au choix du repas.
+        </p>
+    </div>
+
+
+    <!-- Plats -->
+    <div class="mb-16">
+        <h2 class="text-3xl font-semibold mb-5">
+            Proposer des plats
+        </h2>
+
+        <p class="text-xl leading-relaxed max-w-3xl mx-auto">
+            Les utilisateurs peuvent publier des annonces correspondant à des
+            plats. Chaque plat peut avoir un titre, une description et une image
+            afin de donner envie aux autres membres du groupe.
+        </p>
+
+
+        <p class="text-xl leading-relaxed max-w-3xl mx-auto mt-6">
+            Cela permet à chacun de proposer une idée de repas pour le soir.
+        </p>
+    </div>
+
+
+    <!-- Système collaboratif -->
+    <div class="mb-16">
+        <h2 class="text-3xl font-semibold mb-5">
+            Un système simple et collaboratif
+        </h2>
+
+        <p class="text-xl leading-relaxed max-w-3xl mx-auto">
+            L'objectif du site est de résoudre un problème très courant :
+            <strong>« On mange quoi ce soir ? »</strong>
+        </p>
+
+        <p class="text-xl leading-relaxed max-w-3xl mx-auto mt-4">
+            Plutôt que de passer plusieurs minutes à chercher une idée ou
+            à se mettre d'accord, chacun peut proposer un plat et voter.
+            Le site permet ainsi de prendre une décision rapidement tout en
+            donnant à chaque membre du groupe la possibilité de participer.
+        </p>
+    </div>
+
+
+    <!-- Technologies -->
+    <div class="mb-10">
+        <h2 class="text-3xl font-semibold mb-5">
+            Technologies utilisées
+        </h2>
+
+        <p class="text-xl leading-relaxed max-w-3xl mx-auto mb-6">
+            Le projet utilise plusieurs technologies :
+        </p>
+
+        <ul class="text-xl space-y-3 w-fit mx-auto text-left">
+            <li>🐍 <strong>Python / Flask</strong> — fonctionnement du site et du serveur</li>
+            <li>🍃 <strong>MongoDB</strong> — stockage des utilisateurs, groupes et plats</li>
+            <li>🔐 <strong>Bcrypt</strong> — sécurisation des mots de passe</li>
+            <li>☁️ <strong>Cloudinary</strong> — stockage des images des plats</li>
+            <li>📄 <strong>Jinja</strong> — génération dynamique des pages</li>
+            <li>🎨 <strong>HTML / CSS</strong> — création de l'interface</li>
+        </ul>
+    </div>
+
+</section>
 {% endblock %}
