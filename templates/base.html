@@ -10,13 +10,13 @@
 <body class="min-h-screen flex flex-col bg-[linear-gradient(160deg,#EDE4D0,#C7BDA9)]">
 
 <!--tête-->
-    <header class="p-6 flex justify-between">
+    <header class="xl:p-6 lg:p-6 sm:p-6 pt-6 pl-2 flex justify-between">
         {% if session['util'] %}
-        <a href="/accueil">
+        <a href="/accueil" class="pr-4">
             <img class="max-w-10 sm:max-w-24 lg:max-w-38 xl:max-w-48 hover:scale-120 transition-transform duration-300" src="/static/image/Design sans titre (7).png">
         </a>
         {% else %}
-        <a href="/">
+        <a href="/" class="pr-4">
             <img class="max-w-10 sm:max-w-24 lg:max-w-38 xl:max-w-48 hover:scale-120 transition-transform duration-300" src="/static/image/Design sans titre (7).png">
         </a>
         {% endif %}
@@ -26,7 +26,7 @@
         <div class="sm:pt-4 lg:pt-4 xl:pt-4">
             <form action="/recherche" method="post" class="flex items-center bg-white rounded-3xl py-2 px-4 shadow-sm ">
                 <input type="text" name="query" placeholder="Entrez votre recherche" class="outline-none text-[9px] sm:text-base lg:text-lg xl:text-lg ">
-                <input type="image" src="../static/image/rechercher.png" class="w-6 h-6 ml-2 cursor-pointer transition-transform hover:scale-105">
+                <input type="image" src="../static/image/rechercher.png" class="xl:w-6 xl:h-6 ml-2 cursor-pointer lg:w-4 lg:h-4 sm:w-4 sm:h-4  w-3 h-3">
             </form>
         </div>
         {% endif %}

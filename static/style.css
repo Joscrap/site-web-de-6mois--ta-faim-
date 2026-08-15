@@ -28,6 +28,12 @@ input:-webkit-autofill:active{
   transition: arriere-plan 0.2s ease;
 }
 
+@media screen and (max-width: 400px) {
+  .declencheur-profil {
+    padding: 4px 8px;
+  }
+}
+
 
 .declencheur-profil:hover {
   background: rgba(255, 255, 255, 0.1);
