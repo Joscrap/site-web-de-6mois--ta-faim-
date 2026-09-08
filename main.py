@@ -25,8 +25,23 @@ load_dotenv()
 
 mongo_uri = os.getenv("MONGO_URI")
 
+print("MONGO_URI présente :", bool(mongo_uri))
+
+if mongo_uri:
+    print("MONGO_URI commence par :", mongo_uri[:20])
+else:
+    print("ERREUR : MONGO_URI est absente")
+
+
 #connexion a la base de données
 mongo = pymongo.MongoClient(mongo_uri)
+
+try:
+    mongo.admin.command("ping")
+    print("✅ MongoDB connecté !")
+except Exception as e:
+    print("❌ ERREUR CONNEXION MONGODB :", repr(e))
+    
 #créer notre apli flask
 app = Flask(__name__)
 
