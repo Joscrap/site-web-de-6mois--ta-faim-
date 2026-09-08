@@ -32,6 +32,7 @@ if mongo_uri:
 else:
     print("ERREUR : MONGO_URI est absente")
 
+import socket
 def test_portquiz():
     try:
         s = socket.create_connection(("portquiz.net", 27017), timeout=5)
