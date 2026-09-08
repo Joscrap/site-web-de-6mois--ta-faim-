@@ -41,7 +41,26 @@ try:
     print("✅ MongoDB connecté !")
 except Exception as e:
     print("❌ ERREUR CONNEXION MONGODB :", repr(e))
-    
+
+
+import socket
+
+host = "ac-gli9hub-shard-00-00.lsc7bpz.mongodb.net"
+
+try:
+    ip = socket.gethostbyname(host)
+    print("✅ DNS fonctionne :", ip)
+
+    sock = socket.create_connection((ip, 27017), timeout=10)
+    print("✅ MongoDB port 27017 accessible")
+    sock.close()
+
+except Exception as e:
+    print("❌ Connexion impossible :", repr(e))
+
+
+
+
 #créer notre apli flask
 app = Flask(__name__)
 
