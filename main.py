@@ -32,6 +32,36 @@ if mongo_uri:
 else:
     print("ERREUR : MONGO_URI est absente")
 
+import socket
+import dns.resolver
+import sys
+
+def diagnose_mongo(cluster_host):
+    print("=== DIAGNOSTIC MONGO ===", flush=True)
+    
+    # 1. Résolution SRV
+    try:
+        answers = dns.resolver.resolve(f'_mongodb._tcp.{cluster_host}', 'SRV')
+        hosts = [str(a.target).rstrip('.') for a in answers]
+        print(f"✅ SRV OK, hosts trouvés: {hosts}", flush=True)
+    except Exception as e:
+        print(f"❌ SRV résolution échouée: {e}", flush=True)
+        return
+
+    # 2. Test TCP sur chaque host
+    for h in hosts:
+        try:
+            s = socket.create_connection((h, 27017), timeout=5)
+            print(f"✅ TCP OK vers {h}:27017", flush=True)
+            s.close()
+        except Exception as e:
+            print(f"❌ TCP échoué vers {h}:27017 → {e}", flush=True)
+    
+    print("=== FIN DIAGNOSTIC ===", flush=True)
+
+# Remplace par ton vrai cluster (sans mongodb+srv:// ni identifiants)
+diagnose_mongo("ton-cluster.xxxxx.mongodb.net")
+
 
 #connexion a la base de données
 mongo = pymongo.MongoClient(mongo_uri)
