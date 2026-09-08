@@ -60,7 +60,7 @@ def diagnose_mongo(cluster_host):
     print("=== FIN DIAGNOSTIC ===", flush=True)
 
 # Remplace par ton vrai cluster (sans mongodb+srv:// ni identifiants)
-diagnose_mongo("Cluster0.xxxxx.mongodb.net")
+diagnose_mongo("Cluster0.lsc7bpz.mongodb.net")
 
 
 #connexion a la base de données
