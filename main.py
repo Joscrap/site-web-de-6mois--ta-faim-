@@ -25,51 +25,8 @@ load_dotenv()
 
 mongo_uri = os.getenv("MONGO_URI")
 
-print("MONGO_URI présente :", bool(mongo_uri))
-
-if mongo_uri:
-    print("MONGO_URI commence par :", mongo_uri[:20])
-else:
-    print("ERREUR : MONGO_URI est absente")
-
-import socket
-def test_portquiz():
-    try:
-        s = socket.create_connection(("portquiz.net", 27017), timeout=5)
-        print("✅ TCP OK vers portquiz.net:27017 (donc le port 27017 sortant N'EST PAS bloqué globalement par Render)", flush=True)
-        s.close()
-    except Exception as e:
-        print(f"❌ TCP échoué vers portquiz.net:27017 → {e} (Render bloque le port 27017 en sortie, point.)", flush=True)
-
-test_portquiz()
-
 #connexion a la base de données
 mongo = pymongo.MongoClient(mongo_uri)
-
-try:
-    mongo.admin.command("ping")
-    print("✅ MongoDB connecté !")
-except Exception as e:
-    print("❌ ERREUR CONNEXION MONGODB :", repr(e))
-
-
-import socket
-
-host = "ac-gli9hub-shard-00-00.lsc7bpz.mongodb.net"
-
-try:
-    ip = socket.gethostbyname(host)
-    print("✅ DNS fonctionne :", ip)
-
-    sock = socket.create_connection((ip, 27017), timeout=10)
-    print("✅ MongoDB port 27017 accessible")
-    sock.close()
-
-except Exception as e:
-    print("❌ Connexion impossible :", repr(e))
-
-
-
 
 #créer notre apli flask
 app = Flask(__name__)
