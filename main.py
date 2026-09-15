@@ -37,7 +37,6 @@ app = Flask(__name__)
 app.secret_key = os.getenv("SECRET_KEY")
 
 
-
 def get_user():
     if 'util' not in session:
         return None
