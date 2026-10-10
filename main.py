@@ -1,5 +1,5 @@
 #Les import
-from flask import Flask, render_template, request, url_for, redirect, session
+from flask import Flask, render_template, request, url_for, redirect, session, Response
 from flask import jsonify
 
 # on importe os, pour sécuriser le cookie de session
@@ -49,8 +49,22 @@ def get_user():
     
     return user
 
+###############################
+### rout pour bot google ######
+###############################
 
-
+@app.route('/sitemap.xml')
+def sitemap():
+    xml_content = """<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+   <url>
+      <loc>https://ta-faim.onrender.com/</loc>
+      <lastmod>2026-10-10</lastmod>
+      <changefreq>monthly</changefreq>
+      <priority>1.0</priority>
+   </url>
+</urlset>"""
+    return Response(xml_content, mimetype='application/xml')
 
 #######################
 ### PAGE DU SITE ######
