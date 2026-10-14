@@ -66,6 +66,15 @@ def sitemap():
 </urlset>"""
     return Response(xml_content, mimetype='application/xml')
 
+@app.route('/robots.txt')
+def robots():
+    content = """User-agent: *
+Allow: /
+
+Sitemap: https://ta-faim.onrender.com/sitemap.xml
+"""
+    return Response(content, mimetype='text/plain')
+
 #######################
 ### PAGE DU SITE ######
 #######################
