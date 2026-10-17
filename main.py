@@ -390,7 +390,12 @@ def suprimer_annonce(id_post):
 
         image = annonce.get("img")
         if image:
-            cloudinary.uploader.destroy(image, resource_type="image")
+            # On découpe l'URL pour récupérer juste le nom du fichier à la fin
+            public_id = image.split('/')[-1].split('.')[0]
+            try:
+                cloudinary.uploader.destroy(public_id, resource_type="image")
+            except Exception as e:
+                print(f"Erreur Cloudinary : {e}") # Évite de faire planter tout le site si Cloudinary bug
 
         # Retire l'annonce des favoris de tous les utilisateurs
         db_utilis.update_many(
