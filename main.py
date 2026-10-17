@@ -11,6 +11,7 @@ import bcrypt
 import pymongo 
 #pour gére les ObjectId
 from bson.objectid import ObjectId
+from bson.errors import InvalidId
 
 #sécuriter pour les images
 from werkzeug.utils import secure_filename
@@ -27,6 +28,22 @@ mongo_uri = os.getenv("MONGO_URI")
 
 #connexion a la base de données
 mongo = pymongo.MongoClient(mongo_uri)
+
+# les import pour les images
+import cloudinary
+import cloudinary.uploader
+from cloudinary.utils import cloudinary_url
+
+api_sec = os.getenv("CLOUDINARY_SEC")
+api = os.getenv("CLOUDINARY")
+
+# Configuration       
+cloudinary.config( 
+    cloud_name = "dsoscu8cn", 
+    api_key = api, 
+    api_secret = api_sec, # Click 'View API Keys' above to copy your API secret
+    secure=True
+)
 
 #créer notre apli flask
 app = Flask(__name__)
@@ -74,6 +91,12 @@ Allow: /
 Sitemap: https://ta-faim.onrender.com/sitemap.xml
 """
     return Response(content, mimetype='text/plain')
+
+@app.route('/google79e0659bf56d94a0.html')
+def google_verification():
+    # Assurez-vous que 'static' correspond au nom de votre dossier
+    return send_from_directory('static', 'google79e0659bf56d94a0.html')
+
 
 #######################
 ### PAGE DU SITE ######
@@ -354,26 +377,40 @@ def suprimer_annonce(id_post):
 
         db_annonces = mongo.ta_faim.annonces
         db_utilis = mongo.ta_faim.utilisateur
-        
+
+        #Vérifier que l'ID est valide pour éviter un crash serveur
+        try:
+            obj_id = ObjectId(id_post)
+        except InvalidId:
+            return redirect(url_for("admin_annonce", message="ID de l'annonce invalide"))
+
+        annonce = db_annonces.find_one({"_id": obj_id})
+        if not annonce:
+            return redirect(url_for("admin_annonce", message="Annonce introuvable"))
+
+        image = annonce.get("img")
+        if image:
+            cloudinary.uploader.destroy(image, resource_type="image")
+
         # Retire l'annonce des favoris de tous les utilisateurs
         db_utilis.update_many(
             {},
             {
                 "$pull": {
-                    "favoris": ObjectId(id_post)
+                    "favoris": obj_id
                 }
             }
         )
 
-        annonce = db_annonces.delete_one({"_id": ObjectId(id_post)})
+        resultat_suppression = db_annonces.delete_one({"_id": obj_id})
 
-        if annonce.deleted_count == 1:
-            return redirect(url_for("admin_annonce", message="L'annonce a été  supprimer"))
+        if resultat_suppression.deleted_count == 1:
+            return redirect(url_for("admin_annonce", message="L'annonce a été supprimée"))
         else:
-            return redirect(url_for("admin_annonce", message="Annonce introuvable"))
+            return redirect(url_for("admin_annonce", message="Erreur lors de la suppression"))
     
     else:
-        return "Accès refusé. Vous devez être connecté en tant qu'administrateur."
+        return "Accès refusé. Vous devez être connecté en tant qu'administrateur.", 403
 
 
 
@@ -569,23 +606,7 @@ def create_groupe():
 
 ###########################################################################################################################
 
-import cloudinary
-import cloudinary.uploader
-from cloudinary.utils import cloudinary_url
-
 def upload(image):
-    api_sec = os.getenv("CLOUDINARY_SEC")
-    api = os.getenv("CLOUDINARY")
-
-
-    # Configuration       
-    cloudinary.config( 
-        cloud_name = "dsoscu8cn", 
-        api_key = api, 
-        api_secret = api_sec, # Click 'View API Keys' above to copy your API secret
-        secure=True
-    )
-
     # Upload an image
     upload_result = cloudinary.uploader.upload(image)
 
@@ -619,14 +640,14 @@ def nouvelle_annonce():
 
         #Vérifie :qu’un fichier existe et qu’il n’est pas vide
         if not image or image.filename == '':
-            return render_template('création_annonce.html', erreur="Vous devez ajouter une image !")
+            return render_template('creation_annonce.html', erreur="Vous devez ajouter une image !")
 
         if not titre or titre.strip() == "":
-            return render_template('création_annonce.html', erreur="Titre obligatoire")
+            return render_template('creation_annonce.html', erreur="Titre obligatoire")
 
         # vérifie le format du fichier (fonction au dessus)
         if not allowed_file(image.filename):
-            return render_template('création_annonce.html', erreur="Extension non autorisée. Seuls les JPG et PNG sont acceptés")
+            return render_template('creation_annonce.html', erreur="Extension non autorisée. Seuls les JPG et PNG sont acceptés")
 
 
         image_url = upload(image)
@@ -642,7 +663,7 @@ def nouvelle_annonce():
         #on retourne sur la page d'acceil
         return redirect(url_for('accueil'))
     else:
-        return render_template('création_annonce.html')
+        return render_template('creation_annonce.html')
 
 
 ###########################################################################################################################
