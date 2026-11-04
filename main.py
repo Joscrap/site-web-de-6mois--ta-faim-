@@ -83,7 +83,7 @@ def sitemap():
 </urlset>"""
     return Response(xml_content, mimetype='application/xml')
 
-@app.route('/robots.txt')
+@app.route('/Robots.txt')
 def robots():
     content = """User-agent: *
 Allow: /
