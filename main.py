@@ -75,7 +75,7 @@ def sitemap():
     xml_content = """<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
    <url>
-      <loc>https://ta-faim.onrender.com/</loc>
+      <loc>https://ta-faim.duckdns.org/</loc>
       <lastmod>2026-10-10</lastmod>
       <changefreq>monthly</changefreq>
       <priority>1.0</priority>
@@ -83,19 +83,16 @@ def sitemap():
 </urlset>"""
     return Response(xml_content, mimetype='application/xml')
 
-@app.route('/Robots.txt')
+@app.route('/robots.txt')
 def robots():
     content = """User-agent: *
 Allow: /
 
-Sitemap: https://ta-faim.onrender.com/sitemap.xml
+Sitemap: https://ta-faim.duckdns.org/sitemap.xml
 """
     return Response(content, mimetype='text/plain')
 
-@app.route('/google79e0659bf56d94a0.html')
-def google_verification():
-    # Assurez-vous que 'static' correspond au nom de votre dossier
-    return send_from_directory('static', 'google79e0659bf56d94a0.html')
+
 
 
 #######################
