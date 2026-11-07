@@ -85,12 +85,7 @@ def sitemap():
 
 @app.route('/robots.txt')
 def robots():
-    content = """User-agent: *
-Allow: /
-
-Sitemap: https://ta-faim.duckdns.org/sitemap.xml
-"""
-    return Response(content, mimetype='text/plain')
+   return send_from_directory(app.static_folder, request.path[1:])
 
 
 
