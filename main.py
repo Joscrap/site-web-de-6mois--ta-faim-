@@ -1,5 +1,5 @@
 #Les import
-from flask import Flask, render_template, request, url_for, redirect, session, Response
+from flask import Flask, render_template, request, url_for, redirect, session, Response, send_from_directory
 from flask import jsonify
 
 # on importe os, pour sécuriser le cookie de session
