@@ -3,20 +3,20 @@
 {% block content %}
 
 <!-- Structure du bloc d'annonce -->
- <section class="flex justify-center pt-12">
+ <section class="flex justify-center pt-12 px-8">
     <article class="sm:max-w-2xl lg:max-w-3xl xl:max-w-5xl max-w-sm p-6 bg-white/60 border border-white/40 backdrop-blur-md rounded-3xl shadow-lg">
 
         <div class="flex justify-center gap-6">
             <div>
                 <!--titre-->
-                <h2 class="sm:text-3xl lg:text-4xl xl:text-5xl text-2xl text-center pb-2 font-semibold">{{annonce['titre']}}</h2>
+                <h2 class="sm:text-3xl lg:text-4xl xl:text-5xl text-xl text-center pb-2 font-semibold">{{annonce['titre']}}</h2>
 
                 <!--auteur-->
                 <p class="sm:text-sm lg:text-md xl:text-xl text-xs italic pt-6">plat proposée par <b>{{annonce['auteur']}}</b> le <b>{{annonce.date.strftime("%d/%m/%Y") }}</b></p>
             </div>
 
             <!--image de l'annonce-->
-            <img class="sm:max-w-xs lg:max-w-md xl:max-w-lg max-w-40 sm:max-h-40 lg:max-h-70 xl:max-h-80 max-h-30 rounded-xl object-cover" src="{{ annonce.img }}">
+            <img class="sm:max-w-xs lg:max-w-md xl:max-w-lg max-w-26 sm:max-h-40 lg:max-h-70 xl:max-h-80 max-h-20 rounded-xl object-cover" src="{{ annonce.img }}">
         </div>
 
         <!--description-->
