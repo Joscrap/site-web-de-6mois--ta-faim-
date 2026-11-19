@@ -259,7 +259,7 @@ def favorie():
     # Ça permettra au template d'afficher ❤️ ou 🤍 selon le cas
     user_favoris = user.get('favoris', [])
 
-    # 👉 si c’est PAS une liste, on la transforme en liste
+    # si c’est PAS une liste, on la transforme en liste
     if not isinstance(user_favoris, list):
         user_favoris = [user_favoris]
 
@@ -959,8 +959,15 @@ def proposer_vote(id_annonce):
             {'nom': team_name},
             {'$set': {f'votes.{id_annonce}': []}}
         )
- 
-    return redirect(url_for('groupe'))
+
+    # On demande à Flask : "Sur quelle page était l'utilisateur avant de cliquer ?"
+    page_precedente = request.referrer
+
+    if page_precedente:
+            return redirect(page_precedente)
+    else:
+            return redirect(url_for('groupe'))
+             
  
  
 ###########################################################################################################################
@@ -987,9 +994,6 @@ def reset_votes():
     )
  
     return redirect(url_for('groupe'))
-
-
-
 
 # execution
 if __name__ == '__main__':
