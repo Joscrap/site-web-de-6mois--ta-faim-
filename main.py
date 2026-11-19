@@ -178,18 +178,25 @@ def annonce(id_annonces):
     db_annonces = mongo.ta_faim.annonces
 
     # On récupère l'annonce dont l'_id correspond à celui passé dans l'URL
-    annonces = db_annonces.find_one({"_id": ObjectId(id_annonces)})
+    annonce = db_annonces.find_one({"_id": ObjectId(id_annonces)})
     
     # On récupère sa liste de favoris pour savoir si cette annonce est déjà en favori
     # Ça permettra au template d'afficher ❤️ ou 🤍 selon le cas
     user_favoris = user.get('favoris', [])
 
-    # 👉 si c’est PAS une liste, on la transforme en liste
+    # si c’est PAS une liste, on la transforme en liste
     if not isinstance(user_favoris, list):
         user_favoris = [user_favoris]
 
 
-    return render_template("annonce_grand.html", annonces=annonces, nom=session['util'], user_favoris=user_favoris)
+    team_name = user.get('team')
+    team = mongo.ta_faim.team.find_one({'nom': team_name})
+
+    # récupère tout les annonces qui sont dans les votes pour afficher "✓ En vote" si déjà dedans
+    votes_data = team.get('votes', {})
+
+
+    return render_template("annonce_grand.html", annonce=annonce, nom=session['util'], user_favoris=user_favoris, votes_data=votes_data)
 
 
 ###########################################################################################################################

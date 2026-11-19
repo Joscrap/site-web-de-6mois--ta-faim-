@@ -4,39 +4,52 @@
 
 <!-- Structure du bloc d'annonce -->
  <section class="flex justify-center pt-12">
-    <article class="w-xl p-6 bg-white/60 border border-white/40 backdrop-blur-md rounded-3xl shadow-lg">
+    <article class="sm:max-w-2xl lg:max-w-3xl xl:max-w-5xl max-w-sm p-6 bg-white/60 border border-white/40 backdrop-blur-md rounded-3xl shadow-lg">
 
-        <!--titre-->
-        <h2 class="text-4xl text-center pb-2 font-semibold">{{annonces['titre']}}</h2>
-        <hr>
+        <div class="flex justify-center gap-6">
+            <div>
+                <!--titre-->
+                <h2 class="sm:text-3xl lg:text-4xl xl:text-5xl text-2xl text-center pb-2 font-semibold">{{annonce['titre']}}</h2>
 
-
-        <!--auteur-->
-        <p class="text-xl italic pt-6">plat proposée par <b>{{annonces['auteur']}}</b> le <b>{{annonces.date.strftime("%m/%d/%Y") }}</b></p>
-
-
-        <!--description-->
-        <div class="flex justify-around pt-6">
-            <p class="w-70 pr-4 ">{{annonces['description']}}</p>
-
+                <!--auteur-->
+                <p class="sm:text-sm lg:text-md xl:text-xl text-xs italic pt-6">plat proposée par <b>{{annonce['auteur']}}</b> le <b>{{annonce.date.strftime("%d/%m/%Y") }}</b></p>
+            </div>
 
             <!--image de l'annonce-->
-            <img class="rounded-2xl w-56" src="{{ annonces.img }}"> <!--annonces['img'] → chemin relatif que tu as en BDD, par ex. "uploads/photo.png"-->
-            <!--url_for('static', filename=...) → génère /static/uploads/photo.png-->
+            <img class="sm:max-w-xs lg:max-w-md xl:max-w-lg max-w-40 sm:max-h-40 lg:max-h-70 xl:max-h-80 max-h-30 rounded-xl object-cover" src="{{ annonce.img }}">
         </div>
-        <!-- Formulaire POST pour toggle le favori (on utilise POST car on modifie des données) -->
-        <form action="/toggle_favori/{{ annonces._id }}" method="POST">
-            <button type="submit">
-    
-            <!-- On vérifie si l'_id de cette annonce est dans la liste des favoris de l'utilisateur -->
-            {% if annonces._id in user_favoris %}
-            ❤️ Retirer des favoris   <!-- Déjà en favori → bouton pour retirer -->
-            {% else %}
-            🤍 Ajouter aux favoris   <!-- Pas encore en favori → bouton pour ajouter -->
-            {% endif %}
 
-            </button>
-        </form>
+        <!--description-->
+        <p class="py-10">{{annonce['description']}}</p>
+
+
+
+        <div class="flex gap-4">
+            <!-- Formulaire POST pour toggle le favori (on utilise POST car on modifie des données) -->
+            <form action="/toggle_favori/{{ annonce._id }}" method="POST">
+                <button type="submit">
+    
+                <!-- On vérifie si l'_id de cette annonce est dans la liste des favoris de l'utilisateur -->
+                {% if annonce._id in user_favoris %}
+                ❤️ Retirer des favoris   <!-- Déjà en favori → bouton pour retirer -->
+                {% else %}
+                🤍 Ajouter aux favoris   <!-- Pas encore en favori → bouton pour ajouter -->
+                {% endif %}
+
+                </button>
+            </form>
+
+            {% set id_str = annonce._id | string %}
+            {% if id_str not in votes_data %}
+                <form action="{{ url_for('proposer_vote', id_annonce=id_str) }}" method="POST">
+                    <button type="submit" class="text-sm px-3 py-1.5 rounded-full border border-amber-300 text-amber-700 hover:bg-amber-50 transition cursor-pointer flex-shrink-0">
+                        Proposer au vote
+                    </button>
+                </form>
+            {% else %}
+                <span class="text-sm text-green-600 font-semibold pl-6 pt-1">✓ En vote</span>
+            {% endif %}
+        </div>
     </article>
  </section>
  
